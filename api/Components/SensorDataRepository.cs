@@ -19,27 +19,50 @@ namespace api.Components
         {
             logger.LogInformation($"GetSensorData (с {startDate} по {endDate})");
 
-            var result = db.SensorData
-                .Where(
-                    x => x.TimeStamp >= startDate
-                    && x.TimeStamp <= endDate
-                )
-                .GroupBy(x => x.TimeStamp) // Сгруппировать по метке времени
-                .Select(g => new
-                {
-                    TimeStamp = g.Key, // Метка времени после группировки
-                    Sensors = db.Sensors.Select(sensor => new
-                    {
-                        Id = sensor.Id,
-                        Name = sensor.Name,
-                        Value = g.FirstOrDefault(sd => sd.SensorId == sensor.Id) == null // Получить значение для этого датчика в эту метку времени
-                            ? -1 // Значение сенсора, если оно отсутвует в базе (что невероятно, но все же!)
-                            : g.FirstOrDefault(sd => sd.SensorId == sensor.Id).Value
+            // var result = db.SensorData
+            //     .Where(
+            //         x => x.TimeStamp >= startDate
+            //         && x.TimeStamp <= endDate
+            //     )
+            //     .GroupBy(x => x.TimeStamp) // Сгруппировать по метке времени
+            //     .Select(g => new
+            //     {
+            //         TimeStamp = g.Key, // Метка времени после группировки
+            //         Sensors = db.Sensors.Select(sensor => new
+            //         {
+            //             Id = sensor.Id,
+            //             Name = sensor.Name,
+            //             Value = g.FirstOrDefault(sd => sd.SensorId == sensor.Id) == null // Получить значение для этого датчика в эту метку времени
+            //                 ? -1 // Значение сенсора, если оно отсутвует в базе (что невероятно, но все же!)
+            //                 : g.FirstOrDefault(sd => sd.SensorId == sensor.Id).Value
 
-                    }).ToList()
-                })
+            //         }).ToList()
+            //     })
+            //     .ToList();
+            var sensorIds =  db.Sensors.Select(s => s.Id).ToList();
+            var data =  db.SensorData
+                .Where(x => x.TimeStamp >= startDate && x.TimeStamp <= endDate)
+                .Where(x => sensorIds.Contains(x.SensorId))
+                .GroupBy(x => new { x.TimeStamp, x.SensorId })
+                .Select(g => new { g.Key.TimeStamp, g.Key.SensorId, Value = g.First().Value })
                 .ToList();
 
+            var result = data
+                .GroupBy(x => x.TimeStamp)
+                .Select(g => new
+                {
+                    TimeStamp = g.Key,
+                    Sensors = sensorIds.Select(sensorId =>
+                    {
+                        var sensorData = g.FirstOrDefault(x => x.SensorId == sensorId);
+                        return new
+                        {
+                            Id = sensorId,
+                            Name = db.Sensors.First(s => s.Id == sensorId).Name,
+                            Value = sensorData?.Value ?? -1
+                        };
+                    }).ToList()
+                }).ToList();
             logger.LogInformation("GetSensorData (к-во: {result.Count()})");
             // PPrint(logger, result);
             return result;
