@@ -9,6 +9,14 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5234/api";
 console.log(`API_URL (env) = ${process.env.VITE_API_URL}`);
 console.log(`API_URL = ${API_URL}`);
 
+// Получаем среду в которой выполняется наше vite приложение
+const isProductionEnv: boolean =  import.meta.env.MODE === "production";
+
+if (isProductionEnv) {
+  console.log(`API_URL (production) = ${API_URL}`);
+} else {
+  console.log(`API_URL (development) = ${API_URL}`);
+}
 
 
 export const uploadXmlFile = async (file: File) => {
