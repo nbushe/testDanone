@@ -226,12 +226,12 @@ export const XmlSaveToServer: React.FC<XmlProps> = ({ SensorData, Summary }) => 
       
       const API_URL = isProductionEnv 
         ? // Получаем имя сервера, с которого загружено vite + путь к api
-        `${window.location.protocol}//${window.location.hostname}:5234/api`
-        : "http://localhost:5234/api"
+        `${window.location.protocol}//${window.location.hostname}:5234/api/upload-xml`
+        : "http://localhost:5234/api/upload-xml"
       console.log( `API_URL = ${API_URL}`);
       
 
-      const response = await fetch("http://localhost:5234/api/upload-xml", {
+      const response = await fetch(API_URL, {
         method: "POST",
         body: formData,
       });

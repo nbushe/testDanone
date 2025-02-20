@@ -18,7 +18,7 @@ const IntervalPicker: React.FC<IntervalPickerProps> = ({ defaultStartDate, defau
   const { startDate, endDate } = useSelector((state: RootState) => state.interval);
 
   // Используем значения по умолчанию из пропсов или Redux
-  const resolvedStartDate = startDate ? dayjs(startDate) : dayjs(defaultStartDate ?? new Date(Date.now() - 60 * 60 * 51 * 1000).toISOString());
+  const resolvedStartDate = startDate ? dayjs(startDate) : dayjs(defaultStartDate ?? new Date(Date.now() - 30 * 60 ).toISOString());
   const resolvedEndDate = endDate ? dayjs(endDate) : dayjs(defaultEndDate ?? Date());
 
   // Обновляем Redux при изменении дат
