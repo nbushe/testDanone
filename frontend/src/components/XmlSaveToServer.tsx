@@ -225,7 +225,8 @@ export const XmlSaveToServer: React.FC<XmlProps> = ({ SensorData, Summary }) => 
       
       
       const API_URL = isProductionEnv 
-        ? "http://api_server:5234/api"
+        ? // Получаем имя сервера, с которого загружено vite + путь к api
+        `${window.location.protocol}//${window.location.hostname}:5234/api`
         : "http://localhost:5234/api"
       console.log( `API_URL = ${API_URL}`);
       

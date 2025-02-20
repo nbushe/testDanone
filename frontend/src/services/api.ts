@@ -6,14 +6,14 @@ import axios from "axios";
 let API_URL: string;
 
 // Получаем среду в которой выполняется наше vite приложение
-const isProductionEnv: boolean =  import.meta.env.MODE === "production";
+const isProductionEnv: boolean = import.meta.env.MODE === "production";
 
 
 if (isProductionEnv) {
-  API_URL =  "http://api_server:5234/api";
+  API_URL = `${window.location.protocol}//${window.location.hostname}:5234/api`
   console.log(`API_URL (production) = ${API_URL}`);
 } else {
-  API_URL =  "http://localhost:5234/api";
+  API_URL = "http://localhost:5234/api";
   console.log(`API_URL (development) = ${API_URL}`);
 }
 
