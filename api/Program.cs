@@ -23,7 +23,7 @@ namespace api
                     options.JsonSerializerOptions.IgnoreNullValues = true;
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 });
-            builder.Services.AddResponseCompression();
+            builder.Services.AddResponseCompression(); // Включаем сжатие данных
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
@@ -44,7 +44,7 @@ namespace api
 
             var app = builder.Build();
             // Конфигурация CORS
-            app.UseCors(builder => builder.AllowAnyOrigin());
+            app.UseCors(builder => builder.AllowAnyOrigin()); // Разрешаем любой источник для CORS
 
             // Конфигурация middleware
             if (app.Environment.IsDevelopment())
@@ -71,4 +71,5 @@ namespace api
         }
     }
 }
+
 
