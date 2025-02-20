@@ -1,5 +1,10 @@
 # Базовый образ Node.js для сборки приложения
 FROM node:18-alpine3.20 AS build
+
+# Передаем переменные окружения на этапе сборки
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 WORKDIR /app
 COPY package*.json ./
 RUN corepack enable
