@@ -183,14 +183,6 @@ const options: ToastOptions = {
 
 export const XmlSaveToServer: React.FC<XmlProps> = ({ SensorData, Summary }) => {
 
-  // // Функция для преобразования JSON в XML
-  // const jsonToXml = (json: any): string => {
-  //   const xml = new XMLSerializer().serializeToString(
-  //     new DOMParser().parseFromString(JSON.stringify(json), "application/xml")
-  //   );
-  //   return xml.replace(/<\?xml.*\?>/g, ""); // Удаляем заголовок <?xml ... ?>
-  // };
-
   // Функция для преобразования JSON в XML
   const jsonToXml = (json: any): string => {
     // Оборачиваем данные в корневой элемент "SensorData"
@@ -226,6 +218,17 @@ export const XmlSaveToServer: React.FC<XmlProps> = ({ SensorData, Summary }) => 
       // Отправляем файл на сервер
       const formData = new FormData();
       formData.append("file", file, "data.xml");
+
+      
+      // Получаем среду в которой выполняется наше vite приложение
+      const isProductionEnv: boolean = import.meta.env.MODE === "production";
+      
+      
+      const API_URL = isProductionEnv 
+        ? "http://api_server:5234/api"
+        : "http://localhost:5234/api"
+      console.log( `API_URL = ${API_URL}`);
+      
 
       const response = await fetch("http://localhost:5234/api/upload-xml", {
         method: "POST",

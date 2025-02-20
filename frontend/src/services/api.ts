@@ -2,19 +2,18 @@ import axios from "axios";
 // import process from "process";
 
 
-// const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5234/api";
 // const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5234/api";
-// const API_URL = process.env.VITE_API_URL || "http://localhost:5234/api";
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5234/api";
-console.log(`API_URL (env) = ${process.env.VITE_API_URL}`);
-console.log(`API_URL = ${API_URL}`);
+let API_URL: string;
 
 // Получаем среду в которой выполняется наше vite приложение
 const isProductionEnv: boolean =  import.meta.env.MODE === "production";
 
+
 if (isProductionEnv) {
+  API_URL =  "http://api_server:5234/api";
   console.log(`API_URL (production) = ${API_URL}`);
 } else {
+  API_URL =  "http://localhost:5234/api";
   console.log(`API_URL (development) = ${API_URL}`);
 }
 
