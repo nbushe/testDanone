@@ -17,6 +17,7 @@
     "@mui/system": "^6.4.3",
     "@mui/x-date-pickers": "^7.27.0",
     "@reduxjs/toolkit": "^2.5.1",
+    "@types/node": "^22.13.4",
     "axios": "^1.7.9",
     "chart.js": "^4.4.7",
     "date-fns": "^4.1.0",
