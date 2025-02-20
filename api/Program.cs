@@ -15,7 +15,13 @@ namespace api
             // Создание билдера для веб-приложения
             var builder = WebApplication.CreateBuilder(args);
             // Регистрация сервисов
-            builder.Services.AddControllers(); // Добавляем контроллеры
+            builder.Services.AddControllers() // Добавляем контроллеры
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                })
+            .AddCompression(); // Включить сжатие GZIP
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
@@ -26,14 +32,14 @@ namespace api
             builder.Services.AddTransient<ISensorDataRepository, SensorDataRepository>(); // Добавляем репозиторий данных датчиков
             builder.Services.AddTransient<IXmlValidator, XmlValidator>();   // Добавляем валидатор XML
             builder.Services.AddDbContext<SensorsContext>(); // Добавляем контекст БД
-            
-            
+
+
             builder.WebHost.ConfigureKestrel(options =>
             {
                 options.ListenAnyIP(5234); // HTTP
             });
 
-            
+
             var app = builder.Build();
             // Конфигурация CORS
             app.UseCors(builder => builder.AllowAnyOrigin());
