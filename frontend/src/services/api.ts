@@ -3,7 +3,7 @@ import process from "process";
 
 
 // const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5234/api";
-const API_URL = import.meta.env.VITE_API_URL "http://localhost:5234/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5234/api";
 // const API_URL = process.env.VITE_API_URL "http://localhost:5234/api";
 
 export const uploadXmlFile = async (file: File) => {
