@@ -1,8 +1,10 @@
 
+using System.Text.Json;
 using api.Components;
 using api.Model;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace api
 {
@@ -20,8 +22,8 @@ namespace api
                 {
                     options.JsonSerializerOptions.IgnoreNullValues = true;
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                })
-            .AddCompression(); // Включить сжатие GZIP
+                });
+            builder.Services.AddResponseCompression();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
