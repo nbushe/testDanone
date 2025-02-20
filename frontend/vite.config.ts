@@ -12,4 +12,5 @@ export default defineConfig({
     sourcemap: false,
   },
   base: '/',
+  envPrefix: ['VITE_'],
 })

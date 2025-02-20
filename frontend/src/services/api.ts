@@ -4,7 +4,8 @@ import axios from "axios";
 
 // const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5234/api";
 // const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5234/api";
-const API_URL = process.env.VITE_API_URL || "http://localhost:5234/api";
+// const API_URL = process.env.VITE_API_URL || "http://localhost:5234/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5234/api";
 console.log(`API_URL (env) = ${process.env.VITE_API_URL}`);
 console.log(`API_URL = ${API_URL}`);
 
