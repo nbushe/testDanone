@@ -1,0 +1,77 @@
+services:
+  # База данных postgresql
+  db:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      POSTGRES_USER: your_username
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: your_database
+    ports:
+      - "15432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql 
+
+  # Api 
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    restart: always
+    tty: true
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:5234
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Username=sensor;Password=sensor;Database=sensor_data
+    ports:
+      - "5234:5234"
+    depends_on:
+      - db
+    volumes:
+      - ./api/appsettings.json:/app/appsettings.json
+      - ./api/appsettings.Development.json:/app/appsettings.Development.json
+
+  # Фронтенд (nginx контейнер)
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - VITE_HOST=0.0.0.0
+      - NODE_ENV=production
+    depends_on:
+      - api
+
+  # Эмулятор
+  emulator:
+    build:
+      context: ./emulator
+      dockerfile: Dockerfile
+    restart: always
+    tty: true
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:5234
+      - API_URL=http://api:5234
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Username=sensor;Password=sensor;Database=sensor_data
+    depends_on:
+      - api
+    volumes:
+      - ./api/appsettings.json:/app/appsettings.json
+      - ./api/appsettings.Development.json:/app/appsettings.Development.json
+
+volumes:
+  # Для базы данных postgresql
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./database/data
+      o: bind

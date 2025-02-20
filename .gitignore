@@ -1,0 +1,50 @@
+### Общие исключения ###
+*.log
+*.bak
+*.tmp
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+._*  # файлы атрибутов macOS
+
+### IDE ###
+.vscode/
+.idea/
+*.userprefs
+*.suo
+*.user
+
+### Docker ###
+docker-compose.override.yml
+
+### .NET ###
+**/[Bb]in/
+**/[Oo]bj/
+*.pdb
+*.exe
+*.dll
+*.xml
+*.cache
+appsettings.Development.json
+
+### Frontend ###
+node_modules/
+dist/
+build/
+.cache/
+.env
+.env*.local
+.vite/
+*.tsbuildinfo
+
+# Игнорировать кеш и временные файлы
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Не игнорировать конфиги и плагины!
+!.yarnrc.yml
+!.yarn/releases/
+!.yarn/plugins/
