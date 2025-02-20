@@ -18,7 +18,7 @@ const IntervalPicker: React.FC<IntervalPickerProps> = ({ defaultStartDate, defau
   const { startDate, endDate } = useSelector((state: RootState) => state.interval);
 
   // Используем значения по умолчанию из пропсов или Redux
-  const resolvedStartDate = startDate ? dayjs(startDate) : dayjs(defaultStartDate ?? new Date(Date.now() - 30 * 60 ).toISOString());
+  const resolvedStartDate = startDate ? dayjs(startDate) : dayjs(defaultStartDate ?? new Date(Date.now() - 30 * 60).toISOString());
   const resolvedEndDate = endDate ? dayjs(endDate) : dayjs(defaultEndDate ?? Date());
 
   // Обновляем Redux при изменении дат
@@ -32,7 +32,7 @@ const IntervalPicker: React.FC<IntervalPickerProps> = ({ defaultStartDate, defau
 
   useEffect(() => {
 
-    dispatch(setStartDate(new Date(Date.now() - 60 * 60 * 51 * 1000).toISOString()));
+    dispatch(setStartDate(new Date(Date.now() - 30 * 60).toISOString()));
 
 
     dispatch(setEndDate(new Date(Date.now()).toISOString()));
@@ -41,7 +41,7 @@ const IntervalPicker: React.FC<IntervalPickerProps> = ({ defaultStartDate, defau
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div style={{ display: 'flex', flexDirection: 'row', gap: '40px', justifyContent:"center" }}>
+      <div style={{ display: 'flex', flexDirection: 'row', gap: '40px', justifyContent: "center" }}>
         <DateTimePicker
           label="Начало"
           value={resolvedStartDate}
@@ -52,17 +52,17 @@ const IntervalPicker: React.FC<IntervalPickerProps> = ({ defaultStartDate, defau
             },
           }}
         />
-          <DateTimePicker
-            label="Конец"
-            value={resolvedEndDate}
-            onChange={handleEndDateChange}
-            slotProps={{
-              textField: {
-                fullWidth: true,
-              },
-            }}
-          />
-        
+        <DateTimePicker
+          label="Конец"
+          value={resolvedEndDate}
+          onChange={handleEndDateChange}
+          slotProps={{
+            textField: {
+              fullWidth: true,
+            },
+          }}
+        />
+
       </div>
     </LocalizationProvider>
   );

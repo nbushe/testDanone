@@ -19,21 +19,6 @@ namespace api.Components
         {
             logger.LogInformation($"GetSensorData (с {startDate} по {endDate})");
 
-            // Текущий код:
-            // var result = db.SensorData
-            //     .Where(
-            //         x => x.TimeStamp >= startDate
-            //         && x.TimeStamp <= endDate
-            //     )
-            //     .GroupBy(x => x.TimeStamp)
-            //     .Select(x => new
-            //     {
-            //         TimeStamp = x.Key,
-            //         Value = x.Select(y => y.Value).ToArray()
-            //     })
-            //     .ToList();
-            // Новый код:
-
             var result = db.SensorData
                 .Where(
                     x => x.TimeStamp >= startDate
@@ -56,7 +41,7 @@ namespace api.Components
                 .ToList();
 
             logger.LogInformation("GetSensorData (к-во: {result.Count()})");
-            PPrint(logger, result);
+            // PPrint(logger, result);
             return result;
         }
 
@@ -86,7 +71,7 @@ namespace api.Components
                 })
                 .ToList();
             logger.LogInformation($"GetSensorSummary (к-во: {result.Count()})");
-            PPrint(logger, result);
+            // PPrint(logger, result);
             return result;
         }
 
