@@ -46,7 +46,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - VITE_HOST=0.0.0.0
       - NODE_ENV=production
-      - REACT_APP_API_URL=http://api_server:5234/api
+      - VITE_API_URL=http://api_server:5234/api
     depends_on:
       - api_server
 
