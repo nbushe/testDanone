@@ -24,7 +24,6 @@ docker-compose.override.yml
 *.pdb
 *.exe
 *.dll
-*.xml
 *.cache
 appsettings.Development.json
 

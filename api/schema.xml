@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+  <!-- Определение корневого элемента SensorData -->
+  <xs:element name="SensorData">
+    <xs:complexType>
+      <xs:sequence>
+        <!-- Множество элементов SensorData -->
+        <xs:element name="SensorData" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- Элемент TimeStamp -->
+              <xs:element name="TimeStamp" type="xs:string"/>
+              <!-- Множество элементов Sensors -->
+              <xs:element name="Sensors" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Id" type="xs:int"/>
+                    <xs:element name="Name" type="xs:string"/>
+                    <xs:element name="Value" type="xs:int"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <!-- Множество элементов Summary -->
+        <xs:element name="Summary" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SensorId" type="xs:int"/>
+              <xs:element name="SensorName" type="xs:string"/>
+              <xs:element name="Min" type="xs:int"/>
+              <xs:element name="Max" type="xs:int"/>
+              <xs:element name="Avg" type="xs:decimal"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
