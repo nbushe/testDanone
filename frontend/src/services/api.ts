@@ -1,6 +1,4 @@
 import axios, { AxiosRequestConfig } from "axios";
-// import process from "process";
-
 
 let API_URL: string;
 
@@ -16,7 +14,6 @@ if (isProductionEnv) {
   console.log(`API_URL (development) = ${API_URL}`);
 }
 
-
 export const uploadXmlFile = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
@@ -24,18 +21,6 @@ export const uploadXmlFile = async (file: File) => {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
-
-// export const fetchSensorData = async (startDate: string, endDate: string) => {
-//   // console.log(`StartDate: ${startDate}, EndDate: ${endDate}`);
-//   const data = axios.get(`${API_URL}/data?start=${startDate}&end=${endDate}`).catch(e => { console.log(e) });
-//   return data;
-// };
-
-// export const fetchSensorSummary = async (startDate: string, endDate: string) => {
-//   // console.log(`StartDate: ${startDate}, EndDate: ${endDate}`);
-//   return axios.get(`${API_URL}/sensors/summary?start=${startDate}&end=${endDate}`).catch(e => { console.log(e) });
-// };
-
 
 export const fetchSensorData = async (
   startDate: string,

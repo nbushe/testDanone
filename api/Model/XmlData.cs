@@ -34,7 +34,5 @@ namespace api.Model
         [SwaggerParameter("XML")]
         [Column("Xml")]
         public string? Xml { get; set; }
-
-
     }
 }

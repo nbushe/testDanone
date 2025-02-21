@@ -26,6 +26,8 @@ const App: React.FC = () => {
   const [chartData, setChartData] = useState<SensorsCache>({});
   const [summaryData, setSummaryData] = useState<any>({});
   const [cache, setCache] = useState<SensorsCache>({});
+  const [progress, setProgress] = useState(0);
+  const BATCH_SIZE = 5;
 
   const { startDate, endDate } = useSelector((state: RootState) => state.interval);
   const [isTableExpanded, setIsTableExpanded] = useState(false); // Состояние для раскрытия таблицы
@@ -34,7 +36,6 @@ const App: React.FC = () => {
 
     setCache(prevCache => {
       const newCache = cacheHelpers.addData(prevCache, data);
-      // console.log("UPDATED CACHE", newCache);
       return newCache;
     });
   }
@@ -46,7 +47,6 @@ const App: React.FC = () => {
 
   // Срабатывает при каждом изменении cache
   useEffect(() => {
-    // console.log("Cache updated:", cache);
     setSensorData(intervalCache);
     setChartData(intervalCache);
   }, [intervalCache]);
@@ -57,15 +57,9 @@ const App: React.FC = () => {
       try {
         // Получаем данные с сервера
         const axiosResponse = await fetchSensorData(start ?? "", end ?? "");
-        // const summaryResponse = (await fetchSensorSummary(startDate ?? "", endDate ?? ""))?.data;
-
-        // Логируем их
-        // console.log("CURRENT RESPONSE");
-        // console.log(axiosResponse?.data);
 
         // Добавляем данные в кэш
         axiosResponse?.data && addDataToCache(axiosResponse?.data);
-        // setSummaryData(summaryResponse);
 
       } catch (error) {
         console.error("Ошибка при получении данных реального времени:", error);
@@ -86,64 +80,6 @@ const App: React.FC = () => {
 
   }, [])
 
-  // // Вызывается при изменении даты начала или даты окончания интервала
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const axiosResponse = await fetchSensorData(startDate ?? "", endDate ?? "");
-  //     const summaryResponse = (await fetchSensorSummary(startDate ?? "", endDate ?? ""))?.data;
-  //     console.log("DATARESPONSE");
-  //     console.log(axiosResponse?.data);
-
-  //     // Добавляем данные в кэш
-  //     axiosResponse?.data && addDataToCache(axiosResponse?.data);
-
-
-
-  //     setSensorData(intervalCache || []);
-  //     setChartData(intervalCache || {});
-  //     setSummaryData(summaryResponse);
-  //   };
-  //   fetchData();
-  // }, [startDate, endDate]);
-
-  // useEffect(() => {
-  //   const abortController = new AbortController();
-
-  //   const fetchData = async () => {
-  //     if (!startDate || !endDate) return;
-
-  //     // 1. Генерация минутных интервалов
-  //     const minutes = generateMinuteIntervals(
-  //       new Date(startDate), 
-  //       new Date(endDate)
-  //     );
-
-  //     // 2. Фильтрация минут для загрузки
-  //     const minutesToFetch = minutes.filter(minute => {
-  //       const cacheKey = minute.toISOString();
-  //       return (cache[cacheKey]?.length || 0) < 30;
-  //     });
-
-  //     // 3. Загрузка данных порциями по 5 параллельных запросов
-  //     const BATCH_SIZE = 5;
-  //     for (let i = 0; i < minutesToFetch.length; i += BATCH_SIZE) {
-  //       const batch = minutesToFetch.slice(i, i + BATCH_SIZE);
-  //       const results = await Promise.all(
-  //         batch.map(minute => fetchMinuteData(minute, abortController))
-  //       );
-
-  //       // 4. Обновление кеша
-  //       const newData = results.flat().filter(Boolean) as SensorData[];
-  //       if (newData.length > 0) {
-  //         addDataToCache(newData);
-  //       }
-  //     }
-  //   };
-
-  //   fetchData();
-  //   return () => abortController.abort();
-  // }, [startDate, endDate, cache]);
-
   // Вспомогательные функции
   const generateMinuteIntervals = (start: Date, end: Date): Date[] => {
     const intervals: Date[] = [];
@@ -156,93 +92,6 @@ const App: React.FC = () => {
     }
     return intervals;
   };
-
-  // const fetchMinuteData = async (minute: Date, controller: AbortController) => {
-  //   try {
-  //     const response = await fetchSensorData(
-  //       minute.toISOString(),
-  //       new Date(minute.getTime() + 60000).toISOString(),
-  //       { // Передаем signal в параметрах запроса
-  //         signal: controller.signal 
-  //       }
-  //     );
-  //     return response?.data || [];
-  //   } catch (error) {
-  //     console.error(`Ошибка загрузки данных за ${minute.toISOString()}:`, error);
-  //     return null;
-  //   }
-  // };
-
-
-
-  // useEffect(() => {
-  //   const abortController = new AbortController();
-  //   let isMounted = true; // Флаг для проверки монтирования компонента
-
-  //   const fetchData = async () => {
-  //     try {
-  //       if (!startDate || !endDate) return;
-
-  //       console.log('[LOADER] Начало загрузки данных');
-  //       setLoader(true);
-
-  //       // 1. Генерация минутных интервалов
-  //       const minutes = generateMinuteIntervals(
-  //         new Date(startDate),
-  //         new Date(endDate)
-  //       );
-  //       console.log('[INTERVALS] Сгенерировано минут:', minutes.length);
-
-  //       // 2. Фильтрация минут для загрузки
-  //       const minutesToFetch = minutes.filter(minute => {
-  //         const cacheKey = minute.toISOString();
-  //         const cachedCount = cache[cacheKey]?.length || 0;
-  //         const needFetch = cachedCount < 30;
-
-  //         console.log(`[CACHE CHECK] ${cacheKey}: ${cachedCount} записей, ${needFetch ? 'НУЖНА ЗАГРУЗКА' : 'ПРОПУСК'}`);
-  //         return needFetch;
-  //       });
-
-  //       console.log('[FETCH] Минут для загрузки:', minutesToFetch.length);
-
-  //       // 3. Загрузка данных порциями
-  //       const BATCH_SIZE = 5;
-  //       for (let i = 0; i < minutesToFetch.length; i += BATCH_SIZE) {
-  //         if (!isMounted) break; // Проверка монтирования
-
-  //         const batch = minutesToFetch.slice(i, i + BATCH_SIZE);
-  //         console.log(`[BATCH] Загрузка пакета ${i / BATCH_SIZE + 1} из ${Math.ceil(minutesToFetch.length / BATCH_SIZE)}`);
-
-  //         const results = await Promise.all(
-  //           batch.map(minute => fetchMinuteData(minute, abortController))
-  //         );
-
-  //         const newData = results.flat().filter(Boolean) as SensorData[];
-  //         console.log(`[BATCH] Получено ${newData.length} новых записей`);
-
-  //         if (newData.length > 0) {
-  //           addDataToCache(newData);
-  //           console.log(`[CACHE] Обновлено ${newData.length} записей`);
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error('[FETCH ERROR]', error);
-  //     } finally {
-  //       if (isMounted) {
-  //         console.log('[LOADER] Завершение загрузки данных');
-  //         setLoader(false);
-  //       }
-  //     }
-  //   };
-
-  //   fetchData();
-
-  //   return () => {
-  //     console.log('[CLEANUP] Отмена загрузки');
-  //     isMounted = false;
-  //     abortController.abort();
-  //   };
-  // }, [startDate, endDate]);
 
   // Вспомогательные функции
   const fetchMinuteData = async (minute: Date, controller: AbortController) => {
@@ -266,9 +115,7 @@ const App: React.FC = () => {
       return null;
     }
   };
-  // 1. Замените состояние лоадера
-  const [progress, setProgress] = useState(0);
-  const BATCH_SIZE = 5;
+
   // 2. Обновленный useEffect
 
   // Эффект для загрузки данных
@@ -285,8 +132,6 @@ const App: React.FC = () => {
     let isMounted = true;
     let totalBatches = 0;
     let completedBatches = 0;
-
-
 
     const fetchData = async () => {
       try {
@@ -348,30 +193,6 @@ const App: React.FC = () => {
         }
       }
     }
-    //     for (let i = 0; i < minutesToFetch.length; i += BATCH_SIZE) {
-    //       if (!isMounted) break;
-
-    //       const batch = minutesToFetch.slice(i, i + BATCH_SIZE);
-    //       const results = await Promise.all(
-    //         batch.map(minute => fetchMinuteData(minute, abortController))
-    //       );
-
-    //       // Обработка результатов
-    //       const newData = results.flat().filter(Boolean) as SensorData[];
-    //       console.log(`[BATCH] Получено ${newData.length} записей`);
-
-    //       if (newData.length > 0) {
-    //         addDataToCache(newData); // <-- Используем исправленную функцию
-    //         console.log(`[CACHE] Добавлено ${newData.length} записей`);
-
-    //         // 4. Явное обновление состояния графика
-    //         setChartData(intervalCache);
-    //       }
-    //     }
-    //   } catch (error) {
-    //     // ... обработка ошибок ...
-    //   }
-    // };
 
     fetchData();
 
@@ -400,7 +221,6 @@ const App: React.FC = () => {
               }
             }>
 
-            {/* {loading && <Typography variant="caption"> Загрузка</Typography>} */}
             {progress < 100 &&
               <Box sx={{ width: '100%', mt: 2 }}>
                 <LinearProgress
@@ -480,10 +300,6 @@ const App: React.FC = () => {
               </IconButton>
             </Box>
           </Box>
-          {/* <Box id="table" >
-            <Typography variant="h6" align="center" padding={"15px"} paddingBottom="15px">Таблица данных датчиков</Typography>
-            <DataTable data={sensorData} />
-          </Box> */}
           <br />
         </center>
       </Box>

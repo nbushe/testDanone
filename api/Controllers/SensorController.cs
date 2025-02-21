@@ -60,6 +60,7 @@ namespace api.Controllers
                 return StatusCode(500, "Внутренняя ошибка сервера.");
             }
         }
+        
 
         [HttpGet("sensors/summary")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<object>))]

@@ -24,28 +24,6 @@ interface LineChartProps {
 const LineChartComponent: React.FC<LineChartProps> = ({ cache }) => {
   // const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm")); // Проверка на мобильное устройство
 
-  // const data = cacheHelpers.toArray(cache).flat()
-
-  // // Формируем данные для графика
-  // const plotData = data.length > 0
-  //   ? data.map(((item) => {
-  //     const result: Record<string, number> = {};
-  //     // const Sensors = item.map(i => i.Sensors).flat();
-
-  //     item.Sensors.forEach((sensor, index) => {
-  //       result[`Value${index + 1}`] = sensor.Value; // Создаем ключи вида Value1, Value2, ...
-  //     });
-  //     return {
-  //       ...result, // Значения Value1, Value2, ...
-  //       TimeStamp: format(item.TimeStamp, 'dd MMMM yyyy, HH:mm:ss.SSS', { locale: ru })
-  //     }
-  //   }))
-  //   : [];
-
-  // // Максимальное количество сенсоров в строке данных
-  // const maxRowsValue = maxSensors(data);
-
-
   const data = useMemo(() => cacheHelpers.toArray(cache).flat(), [cache])
 
   const plotData = useMemo(() => {
@@ -64,18 +42,7 @@ const LineChartComponent: React.FC<LineChartProps> = ({ cache }) => {
 
   return (
     <>{data.length > 0
-      // ? <LineChart
-      //   width={winsize}
-      //   height={400}
 
-      //   data={plotData}
-      //   margin={{
-      //     top: 5,
-      //     right: 30,
-      //     left: 20,
-      //     bottom: 5,
-      //   }}
-      // >
       ? <ResponsiveContainer width="100%" height={400}>
         <LineChart
           data={plotData}
@@ -97,6 +64,3 @@ const LineChartComponent: React.FC<LineChartProps> = ({ cache }) => {
 };
 
 export default LineChartComponent;
-// export default React.memo(LineChartComponent, (prevProps, nextProps) => {
-//   return _.isEqual(prevProps.cache, nextProps.cache)
-// })

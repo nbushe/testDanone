@@ -1,5 +1,6 @@
 using System.Text;
 using api.Model;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -24,30 +25,10 @@ namespace api.Components
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public object GetSensorData(DateTime startDate, DateTime endDate)
+        public object GetSensorData(DateTime startDate, DateTime endDate) 
         {
             logger.LogInformation($"GetSensorData (с {startDate} по {endDate})");
 
-            // var result = db.SensorData
-            //     .Where(
-            //         x => x.TimeStamp >= startDate
-            //         && x.TimeStamp <= endDate
-            //     )
-            //     .GroupBy(x => x.TimeStamp) // Сгруппировать по метке времени
-            //     .Select(g => new
-            //     {
-            //         TimeStamp = g.Key, // Метка времени после группировки
-            //         Sensors = db.Sensors.Select(sensor => new
-            //         {
-            //             Id = sensor.Id,
-            //             Name = sensor.Name,
-            //             Value = g.FirstOrDefault(sd => sd.SensorId == sensor.Id) == null // Получить значение для этого датчика в эту метку времени
-            //                 ? -1 // Значение сенсора, если оно отсутвует в базе (что невероятно, но все же!)
-            //                 : g.FirstOrDefault(sd => sd.SensorId == sensor.Id).Value
-
-            //         }).ToList()
-            //     })
-            //     .ToList();
             var data = db.SensorData
                 .Where(x => x.TimeStamp >= startDate && x.TimeStamp <= endDate)
                 // .Where(x => sensorIds.Contains(x.SensorId))

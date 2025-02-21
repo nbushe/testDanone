@@ -12,6 +12,7 @@ namespace api.Model
     [SwaggerTag("Данные с датчика")]
     [Description("Класс, представляющий данные с датчика")]
     [PrimaryKey("Id")]
+    [Index("SensorId")]
     // [Index("TimeStamp")]
     public class SensorData
     {
@@ -33,9 +34,6 @@ namespace api.Model
         [SwaggerParameter("Датчик")]
         [JsonIgnore]
         public virtual Sensor? Sensor { get; set; }
-
-
-
     }
 }
 

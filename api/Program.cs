@@ -41,7 +41,6 @@ namespace api
                 options.ListenAnyIP(5234); // HTTP
             });
 
-
             var app = builder.Build();
             // Конфигурация CORS
             app.UseCors(builder => builder.AllowAnyOrigin()); // Разрешаем любой источник для CORS
@@ -58,7 +57,6 @@ namespace api
                 });
             }
 
-            // app.UseHttpsRedirection(); // Используем перенаправление HTTPS
             app.MapControllers(); // Поключаем контроллеры
 
             // Запуск приложения
