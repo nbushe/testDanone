@@ -5,16 +5,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Components
 {
-    public class SensorDataRepository
+    public class SensorDataRepository : ISensorDataRepository
     {
-        private SensorsContext context
-        private ILogger logger
-        public SensorDataRepository(SensorsContext _context, ILogger _logger) : ISensorDataRepository
+        private readonly SensorsContext db;
+        private readonly ILogger logger;
+        private readonly List<int>? sensorIds;
+
+        public SensorDataRepository(SensorsContext _context, ILogger _logger)
         {
-            logger=_logger;
-            context = _context;
+            logger = _logger;
+            db = _context;
+            sensorIds = [.. db.Sensors.Select(s => s.Id)];
         }
-        private readonly SensorsContext db = context;
 
         /// <summary>
         ///  Получает данные за заданный период времени.
@@ -46,7 +48,6 @@ namespace api.Components
             //         }).ToList()
             //     })
             //     .ToList();
-            var sensorIds = db.Sensors.Select(s => s.Id).ToList();
             var data = db.SensorData
                 .Where(x => x.TimeStamp >= startDate && x.TimeStamp <= endDate)
                 // .Where(x => sensorIds.Contains(x.SensorId))
@@ -71,7 +72,7 @@ namespace api.Components
                     }).ToList()
                 }).ToList();
             logger.LogInformation("GetSensorData (к-во: {result.Count()})");
-            PPrint(logger, result);
+            // PPrint(logger, result);
             return result;
         }
 
