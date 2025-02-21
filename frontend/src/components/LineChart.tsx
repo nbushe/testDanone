@@ -15,7 +15,6 @@ import { ru } from 'date-fns/locale';
 import NoData from './NoData.tsx';
 import { webColors } from '../misc/webColors.ts'
 import { maxSensors } from '../misc/maxSensors.ts';
-import { Theme, useMediaQuery } from '@mui/material';
 import { SensorsCache, cacheHelpers } from '../services/cache.ts';
 
 interface LineChartProps {
@@ -23,7 +22,7 @@ interface LineChartProps {
 }
 
 const LineChartComponent: React.FC<LineChartProps> = ({ cache }) => {
-  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm")); // Проверка на мобильное устройство
+  // const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm")); // Проверка на мобильное устройство
 
   // const data = cacheHelpers.toArray(cache).flat()
 
