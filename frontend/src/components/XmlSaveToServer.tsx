@@ -151,11 +151,12 @@ import { Button } from "@mui/material";
 import { ToastContainer, ToastOptions, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { create } from "xmlbuilder2";
+import { SensorsCache, cacheHelpers } from "../services/cache";
 
-interface SensorData {
-  TimeStamp: string;
-  Sensors: Array<{ Id: number; Name: string; Value: number }>;
-}
+// interface SensorData {
+//   TimeStamp: string;
+//   Sensors: Array<{ Id: number; Name: string; Value: number }>;
+// }
 
 interface SummaryItem {
   SensorId: number;
@@ -166,7 +167,7 @@ interface SummaryItem {
 }
 
 interface XmlProps {
-  SensorData: SensorData[];
+  SensorCache: SensorsCache;
   Summary: SummaryItem[];
 }
 
@@ -181,7 +182,9 @@ const options: ToastOptions = {
   theme: "light",
 }
 
-export const XmlSaveToServer: React.FC<XmlProps> = ({ SensorData, Summary }) => {
+export const XmlSaveToServer: React.FC<XmlProps> = ({ SensorCache, Summary }) => {
+
+  const SensorData = cacheHelpers.toArray(SensorCache)
 
   // Функция для преобразования JSON в XML
   const jsonToXml = (json: any): string => {
@@ -219,17 +222,17 @@ export const XmlSaveToServer: React.FC<XmlProps> = ({ SensorData, Summary }) => 
       const formData = new FormData();
       formData.append("file", file, "data.xml");
 
-      
+
       // Получаем среду в которой выполняется наше vite приложение
       const isProductionEnv: boolean = import.meta.env.MODE === "production";
-      
-      
-      const API_URL = isProductionEnv 
+
+
+      const API_URL = isProductionEnv
         ? // Получаем имя сервера, с которого загружено vite + путь к api
         `${window.location.protocol}//${window.location.hostname}:5234/api/upload-xml`
         : "http://localhost:5234/api/upload-xml"
-      console.log( `API_URL = ${API_URL}`);
-      
+      console.log(`API_URL = ${API_URL}`);
+
 
       const response = await fetch(API_URL, {
         method: "POST",

@@ -3,14 +3,16 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import NoData from "./NoData";
-import { SensorData } from "../misc/SensorData";
 import { maxSensors } from "../misc/maxSensors";
+import { SensorsCache, cacheHelpers } from "../services/cache";
 
 interface DataTableProps {
-  data: SensorData[];
+  cache: SensorsCache;
 }
 
-const DataTable: React.FC<DataTableProps> = ({ data }) => {
+const DataTable: React.FC<DataTableProps> = ({ cache }) => {
+
+  const data = cacheHelpers.toArray(cache).flat();
 
   // Максимальное количество сенсоров в строке данных
   // Оно нужно для заголовка таблицы

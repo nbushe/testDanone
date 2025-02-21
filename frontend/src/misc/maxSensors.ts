@@ -6,8 +6,8 @@ export function maxSensors(data: SensorData[]): SensorData {
         ? data.reduce((maxSensorsRow: SensorData, row: SensorData): SensorData => {
             return row.Sensors.length > maxSensorsRow.Sensors.length ? row : maxSensorsRow;
         },
-            { Sensors: [], TimeStamp: new Date() }
+            { Sensors: [], TimeStamp: new Date().toISOString() }
         )
-        : { Sensors: [], TimeStamp: new Date() };
+        : { Sensors: [], TimeStamp: new Date().toISOString() };
     return result;
 }

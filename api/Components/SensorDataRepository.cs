@@ -5,8 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Components
 {
-    public class SensorDataRepository(SensorsContext context, ILogger logger) : ISensorDataRepository
+    public class SensorDataRepository
     {
+        private SensorsContext context
+        private ILogger logger
+        public SensorDataRepository(SensorsContext _context, ILogger _logger) : ISensorDataRepository
+        {
+            logger=_logger;
+            context = _context;
+        }
         private readonly SensorsContext db = context;
 
         /// <summary>
@@ -39,10 +46,10 @@ namespace api.Components
             //         }).ToList()
             //     })
             //     .ToList();
-            var sensorIds =  db.Sensors.Select(s => s.Id).ToList();
-            var data =  db.SensorData
+            var sensorIds = db.Sensors.Select(s => s.Id).ToList();
+            var data = db.SensorData
                 .Where(x => x.TimeStamp >= startDate && x.TimeStamp <= endDate)
-                .Where(x => sensorIds.Contains(x.SensorId))
+                // .Where(x => sensorIds.Contains(x.SensorId))
                 .GroupBy(x => new { x.TimeStamp, x.SensorId })
                 .Select(g => new { g.Key.TimeStamp, g.Key.SensorId, Value = g.First().Value })
                 .ToList();
@@ -64,7 +71,7 @@ namespace api.Components
                     }).ToList()
                 }).ToList();
             logger.LogInformation("GetSensorData (к-во: {result.Count()})");
-            // PPrint(logger, result);
+            PPrint(logger, result);
             return result;
         }
 

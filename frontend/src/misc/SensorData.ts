@@ -1,8 +1,10 @@
 export interface SensorData {
-    Sensors: {
-      Id: number,
-      Name: string,
-      Value: number
-    }[];
-    TimeStamp: Date;
-  }
+  Sensors: Sensors[];
+  TimeStamp: string;
+}
+
+export interface Sensors {
+  Id: number,
+  Name: string,
+  Value: number
+}
